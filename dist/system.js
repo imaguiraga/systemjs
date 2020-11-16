@@ -548,13 +548,18 @@
 
   function extendImportMap (importMap, newMapText, newMapUrl) {
     try {
-      var newMap = JSON.parse(newMapText);
+      var newMap = (typeof newMapText === "string" ? JSON.parse(newMapText) : newMapText);
+      resolveAndComposeImportMap(newMap, newMapUrl, importMap);
     } catch (err) {
       throw Error( errMsg(1, "systemjs-importmap contains invalid JSON"));
     }
-    resolveAndComposeImportMap(newMap, newMapUrl, importMap);
+    
   }
 
+  systemJSPrototype.importMap = function (text) {
+    extendImportMap(importMap, text, baseUrl);
+  };
+    
   /*
    * Script instantiation loading
    */
